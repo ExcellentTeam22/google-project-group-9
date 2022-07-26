@@ -4,39 +4,25 @@ import os
 from dataclasses import dataclass
 import time
 import re
+from functools import reduce
+
+from classes import *
 
 # -------------------------------------------------Globals--------------------------------------------------------------
 
-#dir_name = 'C:\\Users\\Mohamad-PC\\PycharmProjects\\google\\Archive\\'
-dir_name = 'C:\\Users\\Mohamad-PC\\PycharmProjects\\google\\test\\'
+# dir_name = 'C:\\Users\\Mohamad-PC\\Desktop\\google\\google-project-group-9\\Archive\\'
+dir_name = 'C:\\Users\\Mohamad-PC\\Desktop\\google\\google-project-group-9\\test\\'
 dict = {}
 
-# --------------------------------------------------Class---------------------------------------------------------------
-
-
-@dataclass
-class Node:
-    def __init__(self, completed_sentence: str, source_text: str):
-        self.completed_sentence = completed_sentence
-        self.source_text = source_text
-
-    def __str__(self):
-        return "completed_sentence: " + self.completed_sentence + ', ' + "source_text: " + self.source_text
-
-    def __lt__(self, other):
-        return self.completed_sentence < other.completed_sentence
-@dataclass
-class AutoCompleteData(Node):
-    def __init__(self, completed_sentence: str, source_text: str, offset: int, score: int):
-        self.completed_sentence = completed_sentence
-        self.source_text = source_text
-        self.offset = offset
-        self.score = score
-
-    def __str__(self):
-        return "completed_sentence: " + self.completed_sentence + ',' + "source_text: " + self.source_text
 
 # --------------------------------------------------Function------------------------------------------------------------
+
+def print_line_from_dict(key: str) -> None:
+    print("=" * 20)
+    print("key: ", key)
+    print("-" * 20)
+    for node in dict[key]:
+        print(node)
 
 
 def mapping_files_in_folders(dir_name: str, traversed: list = [], results: list = []) -> list:
@@ -61,9 +47,22 @@ def add_to_dict(line_in_file, path):
             dict[word].append(node)
 
 
+def get_minimum_list(list_of_lists: []) -> []:
+    return min(list_of_lists, key=lambda list: len(list))
+
+
+def intersect_lists(list_of_lists : []):
+    minimum_list = get_minimum_list(list_of_lists)
+    """for list in list_of_lists:
+        result = set(minimum_list).intersection(list)"""
+    #return (set(minimum_list).intersection(list) for list in list_of_lists)
+    return list(reduce(set.intersection, [set(item) for item in list_of_lists]))
+
+
+
 if __name__ == "__main__":
 
-    print("start")
+    """print("start")
 
     for file_name, stat in mapping_files_in_folders(dir_name):
         with open(file_name, encoding='utf-8') as file:
@@ -73,11 +72,5 @@ if __name__ == "__main__":
     for key in dict.keys():
         dict[key].sort()
 
-    for key in dict:
-        print("=" * 20)
-        print("key: ", key)
-    #     print("-" * 20)
-        for a in dict[key]:
-           print(a)
-
-    print("end")
+    print("end")"""
+    print(intersect_lists([["as4x","44", 99, "a"],["asx","asx","44","asx", 99],["asx", 99, "44"]]))
