@@ -37,6 +37,8 @@ def get_list_of_lists(dict: {}, sentence: []) -> []:
     return [dict[word] for word in sentence if word in dict.keys()]
 
 
+def Reduces_according_by_order_sentence(string : str, sentences: []) -> []:
+    return list(filter(lambda sentence: string in sentence.get_completed_sentence(), sentences))
 
 
 def online_function(dict: {}):
@@ -52,7 +54,8 @@ def online_function(dict: {}):
             print(input_prefix)
             list_of_all_sentences_by_input = get_list_of_lists(dict, input_prefix.split())
             list_of_intersected_sentences = intersect_lists(list_of_all_sentences_by_input)
+            list_of_sentences_contain_prefix = Reduces_according_by_order_sentence(input_prefix, list_of_intersected_sentences)
             print("list_of_intersected_sentences: ")
-            for a in list_of_intersected_sentences:
+            for a in list_of_sentences_contain_prefix:
                 print(a)
             # get_best_k_completions(input_prefix, dict)
