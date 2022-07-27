@@ -2,8 +2,8 @@ from OfflinePart import *
 from OnlinePart import *
 
 
-dir_name = 'C:\\Users\\lfarz\\Desktop\\bootcamp\\google-project-group-9\\Archive\\'
-# dir_name = 'C:\\Users\\lfarz\\Desktop\\bootcamp\\google-project-group-9\\test\\'
+# dir_name = 'C:\\Users\\Mohamad-PC\\Desktop\\google\\google-project-group-9\\google-project-group-9\\Archive\\'
+dir_name = 'C:\\Users\\Mohamad-PC\\Desktop\\google\\google-project-group-9\\google-project-group-9\\test\\'
 
 dict = {}
 trie = TrieNode("*")
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     print("start online")
     print("=" * 20)
-    online_function(dict)
+    online_function(dict, trie)
     print("end online")
     print("=" * 20)
 
