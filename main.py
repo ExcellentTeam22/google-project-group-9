@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     print("start online")
     print("=" * 20)
-    online_function(dict)
+    online_function(dict, trie)
     print("end online")
     print("=" * 20)
 

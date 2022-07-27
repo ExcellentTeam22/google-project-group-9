@@ -3,6 +3,7 @@ from typing import List
 from classes import *
 # -----------------------------------------------------------------------------------------------------------------------
 
+
 def get_minimum_list(list_of_lists: []) -> []:
     print(list_of_lists)
     return min(list_of_lists, key=lambda list: len(list))
@@ -43,19 +44,24 @@ def get_list_of_lists(dict: {}, sentence: []) -> ([], []):
             ret.append(dict[word])
         else:
             not_completed_words.append(word)
-    print(ret)
-    print(not_completed_words)
     return ret, not_completed_words
-    # return [(dict[word] for word in sentence if word in dict.keys() else []]
 
 
 def reduces_according_by_order_sentence(string : str, sentences: []) -> []:
     return list(filter(lambda sentence: string in sentence.get_completed_sentence(), sentences))
 
 
-def online_function(dict: {}):
+def get_completion(pref: str, trie) -> []:
+    tuple_to_process = trie.find_prefix(pref)
+    if tuple_to_process[0]:
+        return trie.find_prefix_leaves(pref)
+    return []
+
+
+def online_function(dict: {}, trie):
     input_prefix = ""
     while input_prefix != "exit":
+        list_of_all_sentences_by_input, not_completed_words = [], []
         input_prefix = input_prefix + input(f"Enter your text:\n{input_prefix}")
         if input_prefix == "":  # No input received
             pass
@@ -65,16 +71,40 @@ def online_function(dict: {}):
             print("-" * 20)
             print(input_prefix)
             list_of_all_sentences_by_input, not_completed_words = get_list_of_lists(dict, input_prefix.split())
-            # if len(not_completed_words) != 0:
-            #     input_prefix = ""
-            #     for word in list_of_all_sentences_by_input[0]:
-            #         input_prefix += word.get_complete_
-            list_of_intersected_sentences = intersect_lists(list_of_all_sentences_by_input)
-            list_of_sentences_contain_prefix = reduces_according_by_order_sentence(input_prefix, list_of_intersected_sentences)
-            # if len(list_of_sentences_contain_prefix) >= 5:
-            list_of_sentences_contain_prefix.sort()
-            print("list_of_intersected_sentences: ")
-            for a in list_of_sentences_contain_prefix:
-                print(list_of_sentences_contain_prefix.index(a)+1, a)
+
+            if len(not_completed_words) == 0:
+
+                list_of_intersected_sentences = intersect_lists(list_of_all_sentences_by_input)
+                list_of_sentences_contain_prefix = reduces_according_by_order_sentence(input_prefix, list_of_intersected_sentences)
+                # if len(list_of_sentences_contain_prefix) >= 5:
+                list_of_sentences_contain_prefix.sort()
+                print("list_of_intersected_sentences: ")
+                for a in list_of_sentences_contain_prefix:
+                    print(list_of_sentences_contain_prefix.index(a) + 1, a)
+                else:
+                    get_best_k_completions(input_prefix, dict)
+
+            elif len(not_completed_words) == 1:
+                list_of_completions = get_completion(input_prefix, trie)
+                list_of_completions = list(sorted(list_of_completions, key=len))
+
+                for new_completions in list_of_completions:
+                    if len(list_of_sentences_contain_prefix) > 5:
+                        list_of_sentences_contain_prefix.sort()
+                        break
+                    new_list_of_all_sentences_by_input = [new_completions] + list_of_all_sentences_by_input
+                    list_of_intersected_sentences = intersect_lists(new_list_of_all_sentences_by_input)
+                    new_input_prefix = input_prefix.replace(not_completed_words[0], input_prefix)
+                    list_of_sentences_contain_prefix += reduces_according_by_order_sentence(new_input_prefix,
+                                                                                       list_of_intersected_sentences)
+
+
+
+                print("list_of_intersected_sentences: ")
+                for a in list_of_sentences_contain_prefix:
+                    print(list_of_sentences_contain_prefix.index(a) + 1, a)
+                else:
+                    get_best_k_completions(input_prefix, dict)
             else:
-                get_best_k_completions(input_prefix, dict)
+                print("You have too many wrong words, please check the input an try again!!!", not_completed_words)
+
