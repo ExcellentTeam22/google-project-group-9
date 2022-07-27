@@ -35,21 +35,22 @@ def mapping_files_in_folders(dir_name: str, traversed: list = [], results: list 
     return results
 
 
-def add_to_dict(line_in_file, path, dict: {}):
+def add_new_word_to_data_base(line_in_file, path, dict: {}, trie):
     for word in line_in_file.split():
         node = Node(line_in_file, path)
         if word not in dict.keys():
+            trie.add(word)
             dict[word] = [node]
         else:
             dict[word].append(node)
 
 
 
-def get_dict_by_offline(dict, dir_name):
+def get_dict_by_offline(dict, dir_name, trie):
     for file_name, stat in mapping_files_in_folders(dir_name):
         with open(file_name, encoding='utf-8') as file:
             for line in file:
                 line = " ".join(re.sub(r"[^a-zA-Z0-9]", ' ', line).split())
-                add_to_dict(line, file_name, dict)
+                add_new_word_to_data_base(line, file_name, dict, trie)
     for key in dict.keys():
         dict[key].sort()
