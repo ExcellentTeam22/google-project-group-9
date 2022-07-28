@@ -10,7 +10,9 @@ trie = TrieNode("*")
 
 
 if __name__ == "__main__":
-
+    """
+    The main function
+    """
     print("start")
 
     print("start offline")

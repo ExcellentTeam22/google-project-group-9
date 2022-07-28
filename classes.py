@@ -4,11 +4,17 @@ from typing import Tuple
 
 
 # --------------------------------------------------Classes---------------------------------------------------------------
-
-
 @dataclass
 class Node:
+    """
+    Class to save all the data(sentences).
+    """
     def __init__(self, completed_sentence: str, source_text: str):
+        """
+        Constructor.
+        :param completed_sentence: Complete sentence after editing for quick search.
+        :param source_text: The path of the original sentence(in the files).
+        """
         self.completed_sentence = completed_sentence
         self.source_text = source_text
 
@@ -29,8 +35,6 @@ class Node:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-
-
 @dataclass
 class AutoCompleteData:
     def __init__(self, completed_sentence: str, source_text: str, offset: int, score: int):
@@ -44,8 +48,6 @@ class AutoCompleteData:
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-
-
 @dataclass
 class TrieNode:
     """
@@ -80,8 +82,13 @@ class TrieNode:
     def find_prefix(self, prefix: str) -> Tuple[bool, int, bool]:
         """
         Check and return
-          1. If the prefix exsists in any of the words we added so far
+          1. If the prefix exists in any of the words we added so far
           2. If yes then how may words actually have the prefix
+        :param prefix:
+        :return: This function returns tuple with three parameters:
+                  1.Boolean: If the prefix exists as complete word.
+                  2.Integer: Counter for the number of sentences that contains this prefix.
+                  3.Boolean: If the given prefix exists in the tree.
         """
         node = self
         if not self.children:
@@ -98,14 +105,23 @@ class TrieNode:
 
         return True, node.counter, node.word_finished
 
-    # to do completion
     def get_leaves(self, prefix, array_of_leaves: []):
+        """
+        This recursive function gets the subtree, from "find_prefix_leaves".
+        :param prefix: The given prefix.
+        :param array_of_leaves: a reference for list.
+        """
         for child in self.children:
             if child.word_finished:
                 array_of_leaves.append(prefix + child.char)
             child.get_leaves(prefix + child.char, array_of_leaves)
 
     def find_prefix_leaves(self, prefix: str) -> []:
+        """
+        This function responsible for getting the leaves of the given prefix.
+        :param prefix: String of prefix words.
+        :return: Returns list of all the found leaves(complete words), for specific prefix.
+        """
         node = self
         if not self.children:
             return []
@@ -125,12 +141,13 @@ class TrieNode:
         return array_to_return
 
     def print_trie(self):
+        """
+        This function prints the tree, just for debugging.
+        """
         print("the current root: ", self.char)
-        print("the current root childrens: ")
+        print("the current root children: ")
         for child in self.children:
             print(child.char)
         print("-" * 20)
         for child in self.children:
             child.print_trie()
-
-# ----------------------------------------------------------------------------------------------------------------------
